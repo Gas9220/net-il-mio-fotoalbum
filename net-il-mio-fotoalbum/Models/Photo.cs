@@ -20,7 +20,10 @@ namespace net_il_mio_fotoalbum.Models
 
         public List<Category>? Categories { get; set; }
 
-        public Photo() { }
+        public string ImageSrc => Image == null ? "" : $"data:image/png;base64,{Convert.ToBase64String(Image)}";
+
+        public Photo() { 
+        }
 
         public Photo(string title, string description, byte[] image, bool isVisible)
         {
