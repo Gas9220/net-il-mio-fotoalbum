@@ -161,34 +161,72 @@ namespace net_il_mio_fotoalbum.Controllers
         // POST: Photos/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Image,IsVisible")] Photo photo)
+        public IActionResult Edit(int id, PhotoFormModel data)
         {
-            if (id != photo.Id)
+
+            if (!ModelState.IsValid)
+            {
+                List<SelectListItem> allCategoriesSelectList = new List<SelectListItem>();
+                List<Category> databaseAllCategory = _context.Categories.ToList();
+
+                foreach (Category category in databaseAllCategory)
+                {
+                    allCategoriesSelectList.Add(
+                        new SelectListItem
+                        {
+                            Text = category.Name,
+                            Value = category.Id.ToString()
+                        });
+                }
+
+                PhotoFormModel model = new PhotoFormModel
+                {
+                    Photo = new Photo(),
+                    Categories = allCategoriesSelectList
+                };
+
+                data.Categories = allCategoriesSelectList;
+
+                return View("Edit", data);
+            }
+
+            Photo? photoToEdit = _context.Photos.Where(photo => photo.Id == id).Include(photo => photo.Categories).FirstOrDefault();
+
+            if (photoToEdit != null)
+            {
+                photoToEdit.Categories.Clear();
+
+                photoToEdit.Title = data.Photo.Title;
+                photoToEdit.Description = data.Photo.Description;
+                photoToEdit.IsVisible = data.Photo.IsVisible;
+
+                MemoryStream stream = new MemoryStream();
+                data.ImageFormFile.CopyTo(stream);
+                photoToEdit.Image = stream.ToArray();
+
+                if (data.SelectedCategoriesId != null)
+                {
+                    foreach (string selectedCategorytId in data.SelectedCategoriesId)
+                    {
+                        int intSelectedCategoryId = int.Parse(selectedCategorytId);
+
+                        Category? categoryInDb = _context.Categories.Where(category => category.Id == intSelectedCategoryId).FirstOrDefault();
+
+                        if (categoryInDb != null)
+                        {
+                            photoToEdit.Categories.Add(categoryInDb);
+                        }
+                    }
+                }
+
+                _context.SaveChanges();
+
+                return RedirectToAction("Details", "Photos", new { id = photoToEdit.Id });
+            }
+            else
             {
                 return NotFound();
             }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(photo);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PhotoExists(photo.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(photo);
         }
 
         // GET: Photos/Delete/5
