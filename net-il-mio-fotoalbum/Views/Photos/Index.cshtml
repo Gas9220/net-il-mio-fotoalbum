@@ -24,7 +24,12 @@
             <th>
                 Is visible
             </th>
-            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.Categories)
+            </th>            
+            <th>
+                Actions
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -48,6 +53,15 @@
                     else
                     {
                         <span>No</span>
+                    }
+                </td>
+                <td>
+                    @if (item.Categories != null)
+                    {
+                        @foreach (var category in item.Categories)
+                        {
+                            <span class="badge bg-warning">@category.Name</span>
+                        }
                     }
                 </td>
                 <td>

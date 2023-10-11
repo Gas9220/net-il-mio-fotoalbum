@@ -21,7 +21,7 @@ namespace net_il_mio_fotoalbum.Controllers
         public async Task<IActionResult> Index()
         {
             return _context.Photos != null ?
-                        View(await _context.Photos.ToListAsync()) :
+                        View(await _context.Photos.Include(photo => photo.Categories).ToListAsync()) :
                         Problem("Entity set 'PhotoContext.Photos'  is null.");
         }
 
