@@ -34,8 +34,17 @@
                 <span asp-validation-for="ImageFormFile" class="text-danger"></span>
             </div>
             <div class="form-group mt-2">
-                    <span>Show this image:</span>
-                    <input class="form-check-input" asp-for="Photo.IsVisible" />
+                <span>Show this image:</span>
+                <input class="form-check-input" asp-for="Photo.IsVisible" />
+            </div>
+            <div class="d-flex align-items-center my-2">
+                <strong>Select categories:</strong>
+                <select asp-for="SelectedCategoriesId"
+                        multiple="multiple"
+                        size="5"
+                        class="form-control mb-2 mr-sm-2 ml-sm-3 leftList"
+                        asp-items="@Model.Categories">
+                </select>
             </div>
             <div class="form-group mt-2 mb-3">
                 <input type="submit" value="Create" class="btn btn-warning fw-bold" />

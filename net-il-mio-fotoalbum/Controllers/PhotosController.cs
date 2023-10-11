@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.SqlServer.Server;
 using net_il_mio_fotoalbum.Database;
@@ -44,7 +46,27 @@ namespace net_il_mio_fotoalbum.Controllers
         // GET: Photos/Create
         public IActionResult Create()
         {
-            return View();
+
+            List<SelectListItem> allCategoriesSelectList = new List<SelectListItem>();
+            List<Category> databaseAllCategory = _context.Categories.ToList();
+
+            foreach (Category category in databaseAllCategory)
+            {
+                allCategoriesSelectList.Add(
+                    new SelectListItem
+                    {
+                        Text = category.Name,
+                        Value = category.Id.ToString()
+                    });
+            }
+
+            PhotoFormModel model = new PhotoFormModel
+            {
+                Photo = new Photo(),
+                Categories = allCategoriesSelectList
+            };
+
+            return View("Create", model);
         }
 
         // POST: Photos/Create
@@ -54,10 +76,40 @@ namespace net_il_mio_fotoalbum.Controllers
         {
             if (!ModelState.IsValid)
             {
+                List<SelectListItem> allCategoriesSelectList = new List<SelectListItem>();
+                List<Category> databaseAllCategory = _context.Categories.ToList();
+
+                foreach (Category category in databaseAllCategory)
+                {
+                    allCategoriesSelectList.Add(
+                        new SelectListItem
+                        {
+                            Text = category.Name,
+                            Value = category.Id.ToString()
+                        });
+                }
+
+                data.Categories = allCategoriesSelectList;
+
                 return View("Create", data);
             }
 
-            Console.Write(data.ImageFormFile);
+            data.Photo.Categories = new List<Category>();
+
+            if (data.SelectedCategoriesId != null)
+            {
+                foreach (string categorySelectedId in data.SelectedCategoriesId)
+                {
+                    int intTagSelectedId = int.Parse(categorySelectedId);
+
+                    Category? categoryInDb = _context.Categories.Where(category => category.Id == intTagSelectedId).FirstOrDefault();
+
+                    if (categoryInDb != null)
+                    {
+                        data.Photo.Categories.Add(categoryInDb);
+                    }
+                }
+            }
 
             MemoryStream stream = new MemoryStream();
             data.ImageFormFile.CopyTo(stream);
