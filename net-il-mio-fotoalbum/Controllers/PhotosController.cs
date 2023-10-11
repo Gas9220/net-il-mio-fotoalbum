@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.SqlServer.Server;
 using net_il_mio_fotoalbum.Database;
 using net_il_mio_fotoalbum.Models;
 
@@ -51,19 +52,18 @@ namespace net_il_mio_fotoalbum.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(PhotoFormModel data)
         {
-            Console.Write("Sono entrato");
             if (!ModelState.IsValid)
             {
-                Console.Write("Non valido");
-
                 return View("Create", data);
             }
 
-            Photo newPhoto = data.Photo;
-            MemoryStream stream = new MemoryStream();
-            newPhoto.Image = stream.ToArray();
+            Console.Write(data.ImageFormFile);
 
-            _context.Add(newPhoto);
+            MemoryStream stream = new MemoryStream();
+            data.ImageFormFile.CopyTo(stream);
+            data.Photo.Image = stream.ToArray(); ;
+
+            _context.Add(data.Photo);
 
             await _context.SaveChangesAsync();
 

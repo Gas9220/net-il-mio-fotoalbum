@@ -1,7 +1,11 @@
 .main-logo {
-    width: 55px
+    width: 55px;
 }
 
 .footer-logo {
-    width: 30px
+    width: 30px;
+}
+
+.index-photo {
+    width: 150px;
 }
