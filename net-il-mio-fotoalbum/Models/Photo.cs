@@ -13,7 +13,6 @@ namespace net_il_mio_fotoalbum.Models
         [Required(ErrorMessage = "Description can't be empty")]
         public string Description { get; set; }
 
-        [Required(ErrorMessage = "Image is required")]
         public byte[]? Image { get; set; }
 
         [Required(ErrorMessage = "IsVisible is required")]
