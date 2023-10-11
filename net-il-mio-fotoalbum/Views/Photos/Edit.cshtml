@@ -1,4 +1,4 @@
-﻿@model net_il_mio_fotoalbum.Models.Photo
+﻿@model net_il_mio_fotoalbum.Models.PhotoFormModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -10,28 +10,37 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" asp-controller="Photos" asp-route-id="@Model.Photo.Id" method="post">
+            @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="Photo.Id" />
             <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+                <label asp-for="Photo.Title" class="control-label"></label>
+                <input asp-for="Photo.Title" class="form-control" />
+                <span asp-validation-for="Photo.Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
+                <label asp-for="Photo.Description" class="control-label"></label>
+                <input asp-for="Photo.Description" class="form-control" />
+                <span asp-validation-for="Photo.Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Image" class="control-label"></label>
-                <input asp-for="Image" class="form-control" />
-                <span asp-validation-for="Image" class="text-danger"></span>
+                <label asp-for="ImageFormFile" class="control-label"></label>
+                <input asp-for="ImageFormFile" type="file" class="form-control" />
+                <span asp-validation-for="ImageFormFile" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsVisible" /> @Html.DisplayNameFor(model => model.IsVisible)
-                </label>
+            <div class="form-group mt-2">
+                <span>Show this image:</span>
+                <input class="form-check-input" asp-for="Photo.IsVisible" />
+            </div>
+            <div class="d-flex align-items-center my-2">
+                <strong>Select categories:</strong>
+                <select asp-for="SelectedCategoriesId"
+                        multiple="multiple"
+                        size="5"
+                        class="form-control mb-2 mr-sm-2 ml-sm-3 leftList"
+                        asp-items="@Model.Categories">
+                </select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

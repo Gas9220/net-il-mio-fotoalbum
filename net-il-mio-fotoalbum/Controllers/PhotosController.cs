@@ -123,19 +123,39 @@ namespace net_il_mio_fotoalbum.Controllers
         }
 
         // GET: Photos/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int id)
         {
-            if (id == null || _context.Photos == null)
-            {
-                return NotFound();
-            }
 
-            var photo = await _context.Photos.FindAsync(id);
-            if (photo == null)
+            Photo? photoToEdit = _context.Photos.Where(photo => photo.Id == id).Include(photo => photo.Categories).FirstOrDefault();
+
+            if (photoToEdit == null)
             {
                 return NotFound();
             }
-            return View(photo);
+            else
+            {
+                List<SelectListItem> allCategoriesSelectList = new List<SelectListItem>();
+                List<Category> databaseAllCategory = _context.Categories.ToList();
+
+                foreach (Category category in databaseAllCategory)
+                {
+                    allCategoriesSelectList.Add(
+                        new SelectListItem
+                        {
+                            Text = category.Name,
+                            Value = category.Id.ToString(),
+                            Selected = photoToEdit.Categories.Any(categoryId => categoryId.Id == category.Id)
+                        });
+                }
+
+                PhotoFormModel model = new PhotoFormModel
+                {
+                    Photo = photoToEdit,
+                    Categories = allCategoriesSelectList
+                };
+
+                return View("Edit", model);
+            }
         }
 
         // POST: Photos/Edit/5
