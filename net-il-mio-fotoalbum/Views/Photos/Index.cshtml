@@ -4,11 +4,12 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<div class="d-flex justify-content-between align-items-center mt-2">
+    <h3>Photo list</h3>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+    <a asp-action="Create" class="btn btn-warning fw-bold">New Photo</a>
+</div>
+
 <table class="table">
     <thead>
         <tr>
@@ -26,7 +27,7 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Categories)
-            </th>            
+            </th>
             <th>
                 Actions
             </th>

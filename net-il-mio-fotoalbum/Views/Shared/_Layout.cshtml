@@ -9,15 +9,17 @@
     <link rel="stylesheet" href="~/net_il_mio_fotoalbum.styles.css" asp-append-version="true" />
 </head>
 <body>
+    <div class="d-flex flex-column main-container">
     <partial name="_Header.cshtml" />
 
-    <div class="container-fluid">
+    <div class="container-fluid flex-grow-1">
         <main role="main">
             @RenderBody()
         </main>
     </div>
 
     <partial name="_Footer.cshtml" />
+    </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
