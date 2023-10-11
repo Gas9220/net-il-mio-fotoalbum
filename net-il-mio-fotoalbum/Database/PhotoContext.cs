@@ -11,7 +11,7 @@ namespace net_il_mio_fotoalbum.Database
         public DbSet<Category> Categories { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=PhotosDb;" +
+            optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=MyPhotosDB;" +
             "Integrated Security=True;TrustServerCertificate=True");
         }
     }
