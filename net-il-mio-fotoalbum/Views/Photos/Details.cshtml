@@ -4,39 +4,38 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<div class="d-flex align-items-center justify-content-between my-2">
+    <a asp-action="Index" class="btn btn-warning fw-bold">Back to List</a>
+    <h3>Details</h3>
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning fw-bold">Edit</a>
+</div>
 
 <div>
-    <h4>Photo</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Title)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Title)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Description)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Description)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Image)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Image)
+        <dd class="col-sm-10">
+            <img src="@Html.DisplayFor(model => model.ImageSrc)" class="index-photo"/>
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsVisible)
+        <dt class="col-sm-2">
+            Is visible
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.IsVisible)
         </dd>
     </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
 </div>
