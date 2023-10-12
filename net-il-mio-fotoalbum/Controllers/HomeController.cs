@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using net_il_mio_fotoalbum.Database;
 using net_il_mio_fotoalbum.Models;
 using System.Diagnostics;
 
@@ -6,19 +7,16 @@ namespace net_il_mio_fotoalbum.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private readonly PhotoContext _context;
+
+
+        public HomeController(PhotoContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
-        {
-            return View();
-        }
-
-        public IActionResult Privacy()
         {
             return View();
         }
