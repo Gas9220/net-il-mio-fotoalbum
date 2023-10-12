@@ -1,13 +1,16 @@
 ﻿@model IEnumerable<net_il_mio_fotoalbum.Models.Photo>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Photos list";
 }
 
 <div class="d-flex justify-content-between align-items-center mt-2">
     <h3>Photo list</h3>
 
-    <a asp-action="Create" class="btn btn-warning fw-bold">New Photo</a>
+    <div>
+        <a asp-action="Create" class="btn btn-warning fw-bold">New Photo</a>
+        <a asp-action="Index" asp-controller="Categories" class="btn btn-warning fw-bold">Manage Categories</a>
+    </div>
 </div>
 
 <table class="table">
