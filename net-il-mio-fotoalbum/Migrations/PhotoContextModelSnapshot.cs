@@ -253,32 +253,6 @@ namespace net_il_mio_fotoalbum.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("net_il_mio_fotoalbum.Models.Message", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("PhotoId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Sender")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PhotoId");
-
-                    b.ToTable("Messages");
-                });
-
             modelBuilder.Entity("net_il_mio_fotoalbum.Models.Photo", b =>
                 {
                     b.Property<int>("Id")
@@ -371,15 +345,6 @@ namespace net_il_mio_fotoalbum.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("net_il_mio_fotoalbum.Models.Message", b =>
-                {
-                    b.HasOne("net_il_mio_fotoalbum.Models.Photo", "Photo")
-                        .WithMany()
-                        .HasForeignKey("PhotoId");
-
-                    b.Navigation("Photo");
                 });
 #pragma warning restore 612, 618
         }
