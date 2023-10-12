@@ -1,7 +1,81 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    Layout = "_Layout";
 }
 
-<div class="text-center">
-    <h1 class="display-4">We are working for you </h1>
+<div class="d-flex justify-content-between align-items-center mb-2">
+    <h1>All photos</h1>
 </div>
+<div class="input-group mb-3">
+    <input type="text" class="form-control" placeholder="Search for a photo.." id="photo-input">
+    <button class="btn bg-warning text-white fw-bold" type="button" id="search-btn">Search</button>
+</div>
+<div class="row mt-2" id="photos-container"></div>
+<div id="no-results" class="d-none">No photos founded...</div>
+
+@section Scripts {
+    <script type="text/javascript">
+
+        let photosContainer = document.getElementById("photos-container");
+        let noResults = document.getElementById("no-results");
+        let searchButton = document.getElementById("search-btn");
+        let photoInput = document.getElementById("photo-input");
+
+        loadAllPhotos();
+
+        searchButton.addEventListener("click", function () { searchPhotoByName(photoInput.value) });
+
+        function loadAllPhotos() {
+            axios.get('api/Photos/all')
+                .then((res) => {
+                    photosContainer.innerHTML = ``;
+                    res.data.forEach(photo => {
+                        if (res.data.lenght === 0) {
+                            photosContainer.classList.add("d-none");
+                            noResults.classList.remove("d-none");
+                        } else {
+                            reloadInterface(photo);
+                        }
+                    });
+                });
+        }
+
+        function searchPhotoByName(searchText) {
+            axios.get('/api/Photos/byName', {
+                params: {
+                    searchText: searchText
+                }
+            }).then((res) => {
+                console.log(res.data.length)
+                if (searchText === "") {
+                    photosContainer.classList.remove("d-none");
+                    noResults.classList.add("d-none");
+                    loadAllPhotos();
+                }
+                else if (res.data.length == 0) {
+                    photosContainer.classList.add("d-none");
+                    noResults.classList.remove("d-none");
+                } else {
+                    photosContainer.innerHTML = ``;
+                    res.data.forEach(photo => {
+                        reloadInterface(photo);
+                    });
+                }
+            });
+        }
+
+        function reloadInterface(photo) {
+            photosContainer.innerHTML +=
+                `
+                        <div class="card border-warning border-5 p-0 ms-2" style="width: 18rem;">
+                  <img class="card-img-top ms-0 w-100" src="${photo.imageSrc}" alt="Card image cap">
+          <div class="card-body">
+                    <h5 class="card-title">${photo.title}</h5>
+            <p class="card-text">${photo.description}</p>
+            <a href="#" class="btn btn-warning">Go to details</a>
+          </div>
+        </div>
+                `
+        }
+    </script>
+}
