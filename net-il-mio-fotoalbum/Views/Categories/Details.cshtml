@@ -1,0 +1,26 @@
+﻿@model net_il_mio_fotoalbum.Models.Category
+
+@{
+    ViewData["Title"] = "Category details";
+    Layout = "_layout";
+}
+
+<div>
+    <div class="d-flex align-items-center justify-content-between mt-2">
+        <a asp-action="index" class="btn btn-warning me-2 fw-bold">Back</a>
+        <h4>Category Details</h4>
+        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning fw-bold">Edit</a>
+
+    </div>
+    <div>
+    </div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Category name:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+    </dl>
+</div>
