@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using net_il_mio_fotoalbum.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace net_il_mio_fotoalbum
 {
@@ -39,7 +40,7 @@ namespace net_il_mio_fotoalbum
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Photos}/{action=Index}/{id?}");
+                pattern: "{controller=Home}/{action=Index}");
 
             app.MapRazorPages();
 
