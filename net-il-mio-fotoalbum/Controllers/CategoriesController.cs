@@ -62,7 +62,6 @@ namespace net_il_mio_fotoalbum.Controllers
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
-
         }
 
         // GET: Categories/Edit/5
@@ -84,34 +83,20 @@ namespace net_il_mio_fotoalbum.Controllers
         // POST: Categories/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Category category)
+        public IActionResult Edit(int id, Category category)
         {
-            if (id != category.Id)
-            {
-                return NotFound();
-            }
+            Category? categoryToUpdate = _context.Categories.Find(id);
 
-            if (ModelState.IsValid)
+            if (category.Name.IsNullOrEmpty())
             {
-                try
-                {
-                    _context.Update(category);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CategoryExists(category.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                return View("Edit", categoryToUpdate);
+            }
+            else
+            {
+                categoryToUpdate.Name = category.Name;
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
-            return View(category);
         }
 
         // GET: Categories/Delete/5
