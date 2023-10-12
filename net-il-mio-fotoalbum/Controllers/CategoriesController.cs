@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using net_il_mio_fotoalbum.Database;
 using net_il_mio_fotoalbum.Models;
 
@@ -17,9 +18,9 @@ namespace net_il_mio_fotoalbum.Controllers
         // GET: Categories
         public async Task<IActionResult> Index()
         {
-              return _context.Categories != null ? 
-                          View(await _context.Categories.ToListAsync()) :
-                          Problem("Entity set 'PhotoContext.Categories'  is null.");
+            return _context.Categories != null ?
+                        View(await _context.Categories.ToListAsync()) :
+                        Problem("Entity set 'PhotoContext.Categories'  is null.");
         }
 
         // GET: Categories/Details/5
@@ -49,15 +50,19 @@ namespace net_il_mio_fotoalbum.Controllers
         // POST: Categories/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Category category)
+        public IActionResult Create(Category category)
         {
-            if (ModelState.IsValid)
+            if (category.Name.IsNullOrEmpty())
             {
-                _context.Add(category);
-                await _context.SaveChangesAsync();
+                return View("Create");
+            }
+            else
+            {
+                _context.Categories.Add(category);
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
-            return View(category);
+
         }
 
         // GET: Categories/Edit/5
@@ -141,14 +146,14 @@ namespace net_il_mio_fotoalbum.Controllers
             {
                 _context.Categories.Remove(category);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool CategoryExists(int id)
         {
-          return (_context.Categories?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Categories?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
