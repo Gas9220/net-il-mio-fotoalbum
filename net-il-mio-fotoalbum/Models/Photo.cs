@@ -22,6 +22,8 @@ namespace net_il_mio_fotoalbum.Models
 
         public string ImageSrc => Image == null ? "" : $"data:image/png;base64,{Convert.ToBase64String(Image)}";
 
+        public List<Message> Messages = new List<Message>();
+
         public Photo() { 
         }
 
