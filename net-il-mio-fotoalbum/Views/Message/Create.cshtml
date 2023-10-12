@@ -1,0 +1,70 @@
+﻿@model net_il_mio_fotoalbum.Models.Message
+
+@{
+    Layout = "_layout";
+}
+
+<div class="form-box">
+    <div class="d-flex align-items-center mt-2">
+        <a asp-action="Index" asp-controller="Photos" class="btn btn-warning me-2 fw-bold">Back</a>
+        <h4>New message</h4>
+    </div>
+
+    <hr />
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="text-danger"></div>
+            <div class="form-group">
+                <label class="control-label">Email</label>
+                <input type="email" id="email" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Content</label>
+                <input type="text" id="content" class="form-control" />
+            </div>
+            <div class="form-group mt-2">
+                <input id="submit-button" type="submit" value="Create" class="btn btn-warning" />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="d-none success-box">
+    <h3 class="alert-success p-5 text-center">
+        <a asp-action="index" asp-controller="Photos" class="btn alert-success border-0 me-2 fw-bold">Back to photos</a>
+        Message sent with success!
+    </h3>
+</div>
+
+
+@section Scripts{
+    <script type="text/javascript">
+        let submitButton = document.getElementById("submit-button")
+        submitButton.addEventListener("click", function () { createMessage() })
+
+        function createMessage() {
+            let email = document.getElementById("email").value;
+            let content = document.getElementById("content").value;
+
+            console.log("Eseguito")
+
+            const data = {
+                Email: email,
+                Content: content
+            };
+
+            axios.post("/api/Messages/create", data)
+                .then((res) => {
+                    document.querySelector(".success-box").classList.remove("d-none");
+                    document.querySelector(".form-box").classList.add("d-none");
+                    document.getElementById("email").value = "";
+                    document.getElementById("content").value = "";
+
+                });
+
+        }
+
+    </script>
+}

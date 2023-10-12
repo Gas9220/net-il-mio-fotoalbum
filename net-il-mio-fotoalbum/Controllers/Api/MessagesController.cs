@@ -15,9 +15,11 @@ namespace net_il_mio_fotoalbum.Controllers.Api
         {
             _context = context;
         }
-        [HttpPost]
+
+        [HttpPost("create")]
         public IActionResult CreateMessage([FromBody] Message message)
         {
+            Console.Write(message.Email);
             if (message != null)
             {
                 _context.Messages.Add(message);
@@ -29,5 +31,4 @@ namespace net_il_mio_fotoalbum.Controllers.Api
 
         }
     }
-}
 }
