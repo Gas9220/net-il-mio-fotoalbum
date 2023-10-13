@@ -1,5 +1,6 @@
 ﻿using Azure;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,20 +15,22 @@ namespace net_il_mio_fotoalbum.Controllers
     public class PhotosController : Controller
     {
         private readonly PhotoContext _context;
+        private UserManager<IdentityUser> _userManager;
 
-        public PhotosController(PhotoContext context)
+        public PhotosController(PhotoContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Photos
         public async Task<IActionResult> Index()
         {
-            ClaimsIdentity? user = (ClaimsIdentity?)User.Identity;
-            Claim? id = user.FindFirst(ClaimTypes.NameIdentifier);
+            ClaimsPrincipal currentUser = User;
+            var userId = _userManager.GetUserId(User);
 
             return _context.Photos != null ?
-                        View(await _context.Photos.Where(photo => photo.UserId == id.Value).Include(photo => photo.Categories).ToListAsync()) :
+                        View(await _context.Photos.Where(photo => photo.UserId == userId).Include(photo => photo.Categories).ToListAsync()) :
                         Problem("Entity set 'PhotoContext.Photos'  is null.");
         }
 
@@ -80,8 +83,8 @@ namespace net_il_mio_fotoalbum.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(PhotoFormModel data)
         {
-            ClaimsIdentity? user = (ClaimsIdentity?)User.Identity;
-            Claim? id = user.FindFirst(ClaimTypes.NameIdentifier);
+            ClaimsPrincipal currentUser = User;
+            var userId = _userManager.GetUserId(User);
 
             if (!ModelState.IsValid)
             {
@@ -124,7 +127,7 @@ namespace net_il_mio_fotoalbum.Controllers
             data.ImageFormFile.CopyTo(stream);
             data.Photo.Image = stream.ToArray(); ;
 
-            data.Photo.UserId = id.Value;
+            data.Photo.UserId = userId;
             _context.Add(data.Photo);
 
             await _context.SaveChangesAsync();
