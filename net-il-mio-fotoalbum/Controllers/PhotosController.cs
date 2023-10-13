@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.SqlServer.Server;
 using net_il_mio_fotoalbum.Database;
 using net_il_mio_fotoalbum.Models;
+using System.Security.Claims;
 
 namespace net_il_mio_fotoalbum.Controllers
 {
@@ -22,8 +23,11 @@ namespace net_il_mio_fotoalbum.Controllers
         // GET: Photos
         public async Task<IActionResult> Index()
         {
+            ClaimsIdentity? user = (ClaimsIdentity?)User.Identity;
+            Claim? id = user.FindFirst(ClaimTypes.NameIdentifier);
+
             return _context.Photos != null ?
-                        View(await _context.Photos.Include(photo => photo.Categories).ToListAsync()) :
+                        View(await _context.Photos.Where(photo => photo.UserId == id.Value).Include(photo => photo.Categories).ToListAsync()) :
                         Problem("Entity set 'PhotoContext.Photos'  is null.");
         }
 
@@ -76,6 +80,9 @@ namespace net_il_mio_fotoalbum.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(PhotoFormModel data)
         {
+            ClaimsIdentity? user = (ClaimsIdentity?)User.Identity;
+            Claim? id = user.FindFirst(ClaimTypes.NameIdentifier);
+
             if (!ModelState.IsValid)
             {
                 List<SelectListItem> allCategoriesSelectList = new List<SelectListItem>();
@@ -117,6 +124,7 @@ namespace net_il_mio_fotoalbum.Controllers
             data.ImageFormFile.CopyTo(stream);
             data.Photo.Image = stream.ToArray(); ;
 
+            data.Photo.UserId = id.Value;
             _context.Add(data.Photo);
 
             await _context.SaveChangesAsync();
